@@ -25,8 +25,21 @@ function myMap(collection, callback) {
   const values = Array.isArray(collection)
     ? collection
     : Object.values(collection);
-  return values.map(callback);
+  const mappedArray = [];
+
+  for (let i = 0; i < values.length; i++) {
+    mappedArray.push(callback(values[i]));
+  }
+
+  return mappedArray;
 }
+
+// function myMap(collection, callback) {
+//   const values = Array.isArray(collection)
+//     ? collection
+//     : Object.values(collection);
+//   return values.map(callback);
+// }
 
 // function myMap(collection, callback) {
 //   if (Array.isArray(collection)) {
@@ -37,16 +50,32 @@ function myMap(collection, callback) {
 //     throw new Error("Unsupported collection type");
 //   }
 // }
+
 function myReduce(collection, callback, initialValue) {
   const values = Array.isArray(collection)
     ? collection
     : Object.values(collection);
-  if (initialValue !== undefined) {
-    return values.reduce(callback, initialValue);
-  } else if (values.length > 0) {
-    return values.reduce(callback);
+  let accumulator = initialValue !== undefined ? initialValue : values[0];
+  let startIndex = initialValue !== undefined ? 0 : 1;
+  if (values.length === 0 && initialValue === undefined) {
+    throw new TypeError("Reduce of empty array with no initial value");
   }
+  for (let i = startIndex; i < values.length; i++) {
+    accumulator = callback(accumulator, values[i], i, values);
+  }
+  return accumulator;
 }
+
+// function myReduce(collection, callback, initialValue) {
+//   const values = Array.isArray(collection)
+//     ? collection
+//     : Object.values(collection);
+//   if (initialValue !== undefined) {
+//     return values.reduce(callback, initialValue);
+//   } else if (values.length > 0) {
+//     return values.reduce(callback);
+//   }
+// }
 
 // function myReduce(collection, callback, initialValue) {
 //   if (Array.isArray(collection)) {
@@ -71,12 +100,24 @@ function myReduce(collection, callback, initialValue) {
 //   }
 // }
 
-function myFind(collection, value) {
+function myFind(collection, predicate) {
   const values = Array.isArray(collection)
     ? collection
     : Object.values(collection);
-  return values.find(value);
+  for (let i = 0; i < values.length; i++) {
+    if (predicate(values[i])) {
+      return values[i];
+    }
+  }
+  return undefined;
 }
+
+// function myFind(collection, value) {
+//   const values = Array.isArray(collection)
+//     ? collection
+//     : Object.values(collection);
+//   return values.find(value);
+// }
 
 // function myFind(collection, value) {
 //   if (Array.isArray(collection)) {
@@ -92,8 +133,21 @@ function myFilter(collection, callback) {
   const values = Array.isArray(collection)
     ? collection
     : Object.values(collection);
-  return values.filter(callback);
+  const filteredArray = [];
+  for (let i = 0; i < values.length; i++) {
+    if (callback(values[i])) {
+      filteredArray.push(values[i]);
+    }
+  }
+  return filteredArray;
 }
+
+// function myFilter(collection, callback) {
+//   const values = Array.isArray(collection)
+//     ? collection
+//     : Object.values(collection);
+//   return values.filter(callback);
+// }
 
 // function myFilter(collection, callback) {
 //   if (Array.isArray(collection)) {
